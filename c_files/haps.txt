@@ -1,0 +1,194 @@
+1. HAPS Tool start in dir
+
+/usr/synopsys/protocomp/O-2018.09-4/bin 
+change usr   to  root
+
+start   confpro_gui
+
+2. xtor_memory_test  tool
+
+/home/fpga/Downloads/xtor_mig_ddr3_h80
+
+network
+
+2.1  0-init.sh
+
+2,2  vpu.sh
+
+
+/home/fpga/dataOut/
+/home/fpga/data/
+
+operator    Look at   desk three haps  position
+
+
+    			                          ++++++++++ power 2
+
+                O  button 1
+             *********************** haps 1
+
+
+                                                  ++++++++++ power 3 
+
+
+              power 1    haps 2                     haps 3
+                +           *                         *
+                +           *                         *
+                +           * O button 2              * O button 3
+                +           *                         * 
+                +           *                         * 
+                            *                         *  Key (up - host & ddr   |  down - vpu & ddr)
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+
+Steps are followings:
+
+       1.  close   power from  1 to 3
+       2.  change  flash                    the hole to left
+       3.  open    power from  1 to 3
+       4.  wait    buttons color change to yellow
+       5.  push    button 1
+       6.  when    button 1 color changed to green,  push button 2
+       7.  when    button 2 color changed to green,  push button 3
+       8.  open haps tool file menu 
+           select open file
+                 /home/fpga/vpu2.0/dpu_soc_top_runtimedb_umrbus/vpu/designs/project.conf
+       9.  select down Synchronization 
+                 Configure System  
+                Dialog  select file
+                   /home/fpga/vpu2.0/dpu_soc_top_runtimedb_umrbus/vpu/designs/project.conf
+                  double click list device
+      10.  when system load over, select reset  
+            Source fist    select  0
+                   second  select  1
+      11.  look at SSCOM 
+           when it show wait for FPGA_PCIE_DMA_DONE, run   vpu.sh  upload data
+      12.  when upload data over, push Key down
+      13.  look at SSCOM
+           when vpu run over, push Key up and save SSCOM log to file
+      14.  use xtor_memory_test  down data to /home/fpga/dataOut
+           example:
+		xtor_memory_test -x 2 -o 0x6000000 -m read -f /home/fpga/dataOut/2cm/2cm_A4_0_0_6_1.bin -l 0x1000000
+		xtor_memory_test -x 2 -o 0x9000000 -m read -f /home/fpga/dataOut/2cm/2cm_A4_0_1_9_1.bin -l 0x1000000
+		xtor_memory_test -x 2 -o 0xC000000 -m read -f /home/fpga/dataOut/2cm/2cm_A4_1_0_C_1.bin -l 0x1000000
+		xtor_memory_test -x 2 -o 0xF000000 -m read -f /home/fpga/dataOut/2cm/2cm_A4_1_1_F_1.bin -l 0x1000000
+
+      15. use  SSCOM log file and data files  get *.h264|h265|yuv files
+          example
+
+		./bitstream 7_2.bin 7_2.h264 0x1000 0x50 0x10000 0x31b5 0x30000 0x3128 0x50000 0x30bd 0x70000 0x30d4 0x90000 0x30b3 0xb0000 0x3046 0xd0000 0x3188 0xf0000 0x31ec 0x110000 0x3261 0x130000 0x31bb 0x150000 0x31d9 0x170000 0x31cd
+
+ 		./bitstream 5_2.bin 5_2.h264 0x1000 0x1e 0x10000 0x3503 0x30000 0x34dc 0x50000 0x3442 0x70000 0x342f 0x90000 0x343e 0xb0000 0x3460 0xd0000 0x3502 0xf0000 0x3538 0x110000 0x35f1 0x130000 0x35cc 0x150000 0x35bb 0x170000 0x355a
+
+		./yuv_le 6_yuv.bin 6.yuv 0x160 0x120 0x8 0x129000 0x14e200 0x173400 0x198600 0x1bd800 0x1e2a00 0x207c00 0x22ce00 0x0b9a00
+
+		./yuv_le 8_yuv.bin 8.yuv 0x1a0 0xf0 0x8 0x138000 0x15f000 0x186000 0x1ad000 0x1d4000 0x1fb000 0x222000 0x249000
+
+
+
+
+
+make source datas
+
+		xtor_memory_test -x 2 -o 0x2000000 -m write_from_file -f /home/fpga/data/YUV_352x288_B8_F50.yuv  -l 7603200
+		xtor_memory_test -x 2 -o 0x2200000 -m write_from_file -f /home/fpga/data/YUV_416x240_B10_F50.yuv  -l 14976000
+		xtor_memory_test -x 2 -o 0x2400000 -m write_from_file -f /home/fpga/data/YUV_256x128_B8_F50.yuv  -l 2457600
+		xtor_memory_test -x 2 -o 0x2600000 -m write_from_file -f /home/fpga/data/YUV422_352x288_B8_F50.yuv  -l 10137600
+		xtor_memory_test -x 2 -o 0x2800000 -m write_from_file -f /home/fpga/data/YUV_352x288_B10_F50.yuv  -l 15206400
+		xtor_memory_test -x 2 -o 0x2A00000 -m write_from_file -f /home/fpga/data/YUV_416x240_B8_F50.yuv  -l 7488000
+
+		xtor_memory_test -x 2 -o 0x2C00000 -m write_from_file -f /home/fpga/data/264_160x120_B8_IPPPP_F100.264  -l 306507 
+		xtor_memory_test -x 2 -o 0x2E00000 -m write_from_file -f /home/fpga/data/264_352x288_B10_IBPBP_F100.264 -l 378130 
+		xtor_memory_test -x 2 -o 0x3000000 -m write_from_file -f /home/fpga/data/264_352x288_B8_IBPBP_F100.264 -l 424933
+		xtor_memory_test -x 2 -o 0x3200000 -m write_from_file -f /home/fpga/data/264_416x240_B10_IBBBP_F100.264 -l 74358
+		xtor_memory_test -x 2 -o 0x3400000 -m write_from_file -f /home/fpga/data/264_416x240_B8_IBBBP_F100.264 -l 84999 
+
+		xtor_memory_test -x 2 -o 0x3600000 -m write_from_file -f /home/fpga/data/265_160x120_B8_IPPPP_F100.265 -l 223486  
+		xtor_memory_test -x 2 -o 0x3800000 -m write_from_file -f /home/fpga/data/265_352x288_B10_IBPBP_F100.265 -l 311517 
+		xtor_memory_test -x 2 -o 0x3A00000 -m write_from_file -f /home/fpga/data/265_352x288_B8_IBPBP_F100.265 -l 343151
+		xtor_memory_test -x 2 -o 0x3C00000 -m write_from_file -f /home/fpga/data/265_416x240_B10_IBBBP_F100.265 -l 50407
+		xtor_memory_test -x 2 -o 0x3E00000 -m write_from_file -f /home/fpga/data/265_416x260_B8_IBBBP_F100.265 -l 56302
+
+
+
+xtor_memory_test -x 2 -o 0x2200000 -m write_from_file -f /home/fpga/data/YUV_416x240_B10_F50_ex.yuv  -l 14976000
+xtor_memory_test -x 2 -o 0x2800000 -m write_from_file -f /home/fpga/data/YUV_352x288_B10_F50_ex.yuv  -l 15206400
+
+
+
+
+		xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/YUV_352x288_B8_F50.yuv  -l 7603200
+		xtor_memory_test -x 2 -o 0x8200000 -m write_from_file -f /home/fpga/data/YUV_416x240_B10_F50.yuv  -l 14976000
+		xtor_memory_test -x 2 -o 0x8400000 -m write_from_file -f /home/fpga/data/YUV_256x128_B8_F50.yuv  -l 2457600
+		xtor_memory_test -x 2 -o 0x8600000 -m write_from_file -f /home/fpga/data/YUV422_352x288_B8_F50.yuv  -l 10137600
+		xtor_memory_test -x 2 -o 0x8800000 -m write_from_file -f /home/fpga/data/YUV_352x288_B10_F50.yuv  -l 15206400
+		xtor_memory_test -x 2 -o 0x8A00000 -m write_from_file -f /home/fpga/data/YUV_416x240_B8_F50.yuv  -l 7488000
+
+		xtor_memory_test -x 2 -o 0x8C00000 -m write_from_file -f /home/fpga/data/264_160x120_B8_IPPPP_F100.264  -l 306507 
+		xtor_memory_test -x 2 -o 0x8E00000 -m write_from_file -f /home/fpga/data/264_352x288_B10_IBPBP_F100.264 -l 378130 
+		xtor_memory_test -x 2 -o 0x9000000 -m write_from_file -f /home/fpga/data/264_352x288_B8_IBPBP_F100.264 -l 424933
+		xtor_memory_test -x 2 -o 0x9200000 -m write_from_file -f /home/fpga/data/264_416x240_B10_IBBBP_F100.264 -l 74358
+		xtor_memory_test -x 2 -o 0x9400000 -m write_from_file -f /home/fpga/data/264_416x240_B8_IBBBP_F100.264 -l 84999 
+
+		xtor_memory_test -x 2 -o 0x9600000 -m write_from_file -f /home/fpga/data/265_160x120_B8_IPPPP_F100.265 -l 223486  
+		xtor_memory_test -x 2 -o 0x9800000 -m write_from_file -f /home/fpga/data/265_352x288_B10_IBPBP_F100.265 -l 311517 
+		xtor_memory_test -x 2 -o 0x9A00000 -m write_from_file -f /home/fpga/data/265_352x288_B8_IBPBP_F100.265 -l 343151
+		xtor_memory_test -x 2 -o 0x9C00000 -m write_from_file -f /home/fpga/data/265_416x240_B10_IBBBP_F100.265 -l 50407
+		xtor_memory_test -x 2 -o 0x9E00000 -m write_from_file -f /home/fpga/data/265_416x260_B8_IBBBP_F100.265 -l 56302
+
+
+
+xtor_memory_test -x 2 -o 0x8200000 -m write_from_file -f /home/fpga/data/YUV_416x240_B10_F50_ex.yuv  -l 14976000              
+xtor_memory_test -x 2 -o 0x8800000 -m write_from_file -f /home/fpga/data/YUV_352x288_B10_F50_ex.yuv  -l 15206400
+
+
+xtor_memory_test -x 2 -o 0x00 -m write_from_file -f /home/fpga/data/zero_1G.bin  -l 0x40000000
+xtor_memory_test -x 2 -o 0x00 -m write_from_file -f /home/fpga/data/firmware.bin  -l 0x2000000
+xtor_memory_test -x 2 -o 0x4000000 -m write_from_file -f /home/fpga/data/firmware.bin  -l 0x2000000
+xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/src_all_2M.bin  -l 0x2000000
+
+xtor_memory_test -x 2 -o 0x00 -m read -f /home/fpga/data/all_2Mfirmware_32Msrc_1Gzero.bin -l 0x40000000
+
+xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/352x288_10bit_be.yuv -l 0x2000000
+
+#8k 7680x4320 10bit
+xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/we_8k_10bit_50frames.yuv -l 0x40000000
+xtor_memory_test -x 2 -o 0xAE000000 -m read -f /home/fpga/dataOut/8k/8k_0_0_AE_5.bin -l 0x30000000
+
+
+
+
+
+    			                          ++++++++++ power 3
+
+                O  button 3
+             *********************** FB3
+
+
+                                                  ++++++++++ power 1 
+
+
+              power 2      FB2                       FB1
+                +           *                         *
+                +           *                         *
+                +           * O button 2              * O button 1
+                +           *                         * 
+                +           *                         * 
+                            *                         *  Key (up - host & ddr   |  down - vpu & ddr)
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+                            *                         *
+
+
+  FB3 -> FB2  -> FB1
+
+
+
+cfg_status_get_system_log cfg0 -verbose -full -out system_log_verbose_full.txt
