@@ -8,9 +8,8 @@ import re
 import os
 
 #res_91_1_A6_out352_288_10yuv0_12.yuv    -s 352x288 -pix_fmt yuv420p10le
-def ffplay_yuv(argv):
-    print(argv)
-    yuvfile = argv
+def ffplay_yuv(yuvPathfile,yuvfile):
+    print(yuvPathfile)
     print(yuvfile)
     #matchObj = re.match( r'res_(.*)_(.*)_(.*)_out(.*)_(.*)_(.*)yuv(.*)_(.*).yuv', yuvfile, re.M|re.I)
     matchObj = re.search( r'_out(.*)_(.*)_(.*)yuv(.*)_(.*).yuv', yuvfile, re.I)
@@ -24,27 +23,32 @@ def ffplay_yuv(argv):
     cmd  = 'ffplay -s ' + matchObj.group(1) + 'x' + matchObj.group(2) + ' '
     if matchObj.group(3) == '10':
         cmd += ' -pix_fmt yuv420p10le '
-    cmd += yuvfile
+    cmd += yuvPathfile
     print(cmd)
     os.system(cmd)
 
 
-def ffplay_bin(argv):
-    print(argv)
-    binfile = argv;
+def ffplay_bin(binPathfile, binfile):
+    print(binPathfile)
+    print(binfile)
     cmd  = 'ffplay '
-    cmd += binfile
+    cmd += binPathfile
+    print(cmd)
     os.system(cmd)
 
 def ffplay(argv):
     print(argv)
-    fileName = argv[1]
-    print(fileName)
-    if fileName.find('.yuv') >= 0:
-        ffplay_yuv(fileName)
+    fileDir = argv[1]
+    print(fileDir)
+    for root, dirs, files in os.walk(fileDir):
+        for fileName in files:
+            filePathName = os.path.join(root, fileName)
+            if fileName.find('.yuv') >= 0:
+                ffplay_yuv(filePathName,fileName)
+            if fileName.find('.h26') >= 0:
+                ffplay_bin(filePathName,fileName)
     
-    if fileName.find('.h26') >= 0:
-        ffplay_bin(fileName)
+
 
 
 
