@@ -4,7 +4,12 @@
 
 ./haps2.sh
 
-CMD=1
+#CMD=0
+# ./haps3.sh 0
+
+CMD=$1
+
+echo "$0 $1 $CMD"
 
 if [[ $CMD == 0 ]] ; then
 echo "16 source data"
@@ -21,6 +26,12 @@ xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/we_8k_1
 elif [[ $CMD == 4 ]] ; then
 echo "we_8192x8192.yuv"
 xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/we_8192x8192.yuv -l 0x40000000
+elif [[ $CMD == 5 ]] ; then
+echo "352x288_10bit_le.yuv"
+xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/352x288_10bit_le.yuv -l 0x63C6000
+elif [[ $CMD == 6 ]] ; then
+echo "we_10bit_8192x8192.yuv"
+xtor_memory_test -x 2 -o 0x8000000 -m write_from_file -f /home/fpga/data/we_10bit_8192x8192.yuv -l 0x40000000
 fi
 
 
