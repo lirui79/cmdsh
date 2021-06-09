@@ -36,11 +36,12 @@ def ffplay_bin(binPathfile, binfile):
     print(cmd)
     os.system(cmd)
 
-def ffplay(argv):
-    print(argv)
-    fileDir = argv[1]
+def list_file_dir(fileDir):
     print(fileDir)
     for root, dirs, files in os.walk(fileDir):
+        for filedir in dirs:
+            list_file_dir(filedir)
+        
         for fileName in files:
             filePathName = os.path.join(root, fileName)
             if fileName.find('.yuv') >= 0:
@@ -48,6 +49,12 @@ def ffplay(argv):
             if fileName.find('.h26') >= 0:
                 ffplay_bin(filePathName,fileName)
     
+
+def ffplay(argv):
+    print(argv)
+    fileDir = argv[1]
+    print(fileDir)
+    list_file_dir(fileDir)
 
 
 
