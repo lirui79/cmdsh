@@ -1,0 +1,28 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: network4g
+# Required-Start: $local_fs
+# Required-Stop: 
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start or stop the network4g.
+### END INIT INFO
+
+proc_name="quectel-CM"
+time=$(date +%Y-%m-%d)
+proc_path="/usr/local/smartbox/bin/"
+proc_log="/usr/local/smartbox/log/"${proc_name}"-"${time}".log"
+
+case "$1" in
+start)
+echo ${proc_path}${proc_name} "log:" ${proc_log}
+${proc_path}${proc_name} -f ${proc_log} &
+;;
+stop)
+#proc_pid=$(ps -elf | grep "quectel-CM" | grep -v grep | head -n 1 | awk '{print $4}')
+proc_pid=$(ps -elf|grep ${proc_name}|grep -v grep|head -n 1|awk '{print $4}')
+echo ${proc_name} "pid:" ${proc_pid}
+kill -9 ${proc_pid}
+esac
+
+exit 0
